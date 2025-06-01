@@ -103,4 +103,20 @@ router.put('/:id', auth, authorizeStaff, async (req, res) => {
   }
 });
 
+// --- RUTA 5: Eliminar un manga/cómic por ID (DELETE) ---
+// DELETE /api/mangas/:id
+router.delete('/:id', auth, authorizeStaff, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const mangaEliminado = await Manga.findByIdAndDelete(id);
+
+    if (!mangaEliminado) {
+      return res.status(404).json({ message: 'Manga no encontrado para eliminar' });
+    }
+    res.status(200).json({ message: 'Manga eliminado correctamente', manga: mangaEliminado });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al eliminar el manga', error: error.message });
+  }
+});
+
 module.exports = router; // Exportar el router
